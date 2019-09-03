@@ -1,0 +1,23 @@
+<ion-card color="dark">
+
+    <ion-card-header>
+
+      <ion-card-subtitle>
+        <span class="text-primary"> {{ indice + 1 }} </span>
+        <span class="noticias-source">{{ noticia.source.name }}</span>
+      </ion-card-subtitle>
+
+      <ion-card-title>{{ noticia.title }}</ion-card-title>
+
+    </ion-card-header>
+
+    <ion-img *ngIf="noticia.urlToImage" [src]="noticia.urlToImage">
+    </ion-img>
+
+    <ion-card-content>
+      <p>
+        {{ noticia.description }}
+      </p>
+    </ion-card-content>
+
+  </ion-card>
