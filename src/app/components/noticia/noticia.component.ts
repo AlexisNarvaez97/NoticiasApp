@@ -6,6 +6,7 @@ import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 import { ActionSheetController } from '@ionic/angular';
 
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { DataLocalService } from '../../services/data-local.service';
 
 
 
@@ -18,8 +19,10 @@ export class NoticiaComponent implements OnInit {
 
   @Input() noticia: Article;
   @Input() indice: number;
+  @Input() enFavoritos;
 
-  constructor(private iab: InAppBrowser, public actionSheetController: ActionSheetController, private socialSharing: SocialSharing) { }
+  // tslint:disable-next-line:max-line-length
+  constructor(private iab: InAppBrowser, public actionSheetController: ActionSheetController, private socialSharing: SocialSharing, private dataLocalService: DataLocalService) { }
 
   ngOnInit() { }
 
@@ -30,6 +33,30 @@ export class NoticiaComponent implements OnInit {
   }
 
   async lanzarMenu() {
+
+    let guardarBorrar;
+
+    if( this.enFavoritos ) {
+      guardarBorrar = {
+        text: 'Borrar Favorito',
+        icon: 'trash',
+        cssClass: 'action-dark',
+        handler: () => {
+          console.log('Borrar de favorito');
+          this.dataLocalService.borrarNoticia(this.noticia);
+        }
+      }
+    } else {
+      guardarBorrar = {
+        text: 'Favorite',
+        icon: 'heart',
+        cssClass: 'action-dark',
+        handler: () => {
+          console.log('Favorite clicked');
+          this.dataLocalService.guardarNoticia(this.noticia);
+        }
+      }
+    }
 
     const actionSheet = await this.actionSheetController.create({
       buttons: [
@@ -47,14 +74,7 @@ export class NoticiaComponent implements OnInit {
             )
           }
         },
-        {
-          text: 'Favorite',
-          icon: 'heart',
-          cssClass: 'action-dark',
-          handler: () => {
-            console.log('Favorite clicked');
-          }
-        },
+        guardarBorrar,
         {
           text: 'Cancelar',
           icon: 'close',
